@@ -4,9 +4,7 @@ import Cocoa
 import CoreBluetooth
 
 class ViewController: NSViewController {
-    
-    
-    
+    var pp: CBPeripheral? = nil
     //セントラルの振る舞いは全てcentralManagerで操作します
     private var centralManager:CBCentralManager!
     //接続したペリフェラルを保持するために使います
@@ -95,7 +93,16 @@ extension ViewController : CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
   
         if let uuid = advertisementData["kCBAdvDataServiceUUIDs"] {
-            print(uuid)
+            let id = (uuid as! NSArray)[0] as! CBUUID
+            let idStr = id.uuidString
+            if idStr == "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" {
+                print("find!!")
+                central.connect(peripheral, options: nil)
+                pp = peripheral
+                centralManager.stopScan()
+            } else {
+                print(idStr)
+            }
         }
         
 //        //peripheralのローカルネーム
@@ -129,5 +136,26 @@ extension ViewController : CBCentralManagerDelegate {
     //            centralManager.stopScan()
     //        }
     }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        NSLog("A")
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        NSLog("B")
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        NSLog("C")
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: Error?) {
+        NSLog("D")
+    }
+    
+    func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
+        NSLog("E")
+    }
+    
 }
 

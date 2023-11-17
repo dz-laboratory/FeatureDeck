@@ -42,6 +42,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        
+        // サブスレッドを作ってタスクを実行する
+        DispatchQueue.global().async {
+            for _ in 1...100 {
+                sleep(1)
+                print("abc")
+            }
+        }
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
