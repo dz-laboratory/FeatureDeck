@@ -5,7 +5,7 @@
       location = "group:BluetoothCentral/BluetoothCentral.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/user2/Documents/IdeaProject/FeatureDeck/BluetoothPower/BluetoothPeripheral.xcodeproj">
+      location = "group:/Users/user2/Documents/IdeaProject/FeatureDeck/BluetoothPeripheral/BluetoothPeripheral.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:PushToTalkSample/PushToTalkSample.xcodeproj">

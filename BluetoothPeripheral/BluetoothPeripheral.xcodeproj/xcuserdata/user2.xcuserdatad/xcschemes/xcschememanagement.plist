@@ -7,12 +7,7 @@
 		<key>BluetoothPeripheral.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-		<key>BluetoothPower.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>0</integer>
 		</dict>
 	</dict>
 </dict>

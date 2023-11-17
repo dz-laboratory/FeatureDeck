@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  BluetoothPower
+//  BluetoothPeripheral
 //
 //  Created by anz-ryu on 2023/11/17.
 //
