@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:BluetoothCentral/BluetoothCentral.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/user2/Documents/IdeaProject/FeatureDeck/BluetoothPower/BluetoothPeripheral.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:PushToTalkSample/PushToTalkSample.xcodeproj">
    </FileRef>
    <FileRef
