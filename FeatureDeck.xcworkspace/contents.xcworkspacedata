@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:PushToTalkSample/PushToTalkSample.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:SiriCapability/SiriCapability.xcodeproj">
    </FileRef>
    <FileRef

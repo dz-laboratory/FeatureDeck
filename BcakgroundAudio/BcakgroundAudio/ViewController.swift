@@ -19,12 +19,15 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate {
     
     @IBAction
     func play(sender: UIButton) {
+        // for background
         do {
            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: AVAudioSession.CategoryOptions.mixWithOthers)
            try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print(error)
         }
+        
+        
         let voice = AVSpeechSynthesisVoice.init(language: "ja-JP")
         utterance.voice = voice
         synthesizer.delegate = self
