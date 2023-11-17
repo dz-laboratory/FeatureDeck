@@ -4,4 +4,7 @@
    <FileRef
       location = "group:SiriCapability/SiriCapability.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:SiriCapability/../BcakgroundAudio/BcakgroundAudio.xcodeproj">
+   </FileRef>
 </Workspace>

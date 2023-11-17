@@ -38,6 +38,13 @@
 			remoteGlobalIDString = 0F2ACADB2B048E4700F70839;
 			remoteInfo = SiriInetent;
 		};
+		0FF86AC12B0717800019DE62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0FF86ABD2B0717800019DE62 /* BcakgroundAudio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0FF86AA62B07177E0019DE62;
+			remoteInfo = BcakgroundAudio;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -74,6 +81,7 @@
 		0F2ACAEF2B048E4800F70839 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		0F2ACAF12B048E4800F70839 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0F2ACAFF2B048F3E00F70839 /* SiriIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = SiriIntents.intentdefinition; sourceTree = "<group>"; };
+		0FF86ABD2B0717800019DE62 /* BcakgroundAudio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BcakgroundAudio.xcodeproj; path = ../BcakgroundAudio/BcakgroundAudio.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +114,7 @@
 		0F2ACAB62B0469FD00F70839 = {
 			isa = PBXGroup;
 			children = (
+				0FF86ABD2B0717800019DE62 /* BcakgroundAudio.xcodeproj */,
 				0F2ACAC12B0469FD00F70839 /* SiriCapability */,
 				0F2ACAE02B048E4700F70839 /* SiriInetent */,
 				0F2ACAEB2B048E4800F70839 /* SiriInetentUI */,
@@ -165,6 +174,14 @@
 				0F2ACAF12B048E4800F70839 /* Info.plist */,
 			);
 			path = SiriInetentUI;
+			sourceTree = "<group>";
+		};
+		0FF86ABE2B0717800019DE62 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0FF86AC22B0717800019DE62 /* BcakgroundAudio.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,6 +273,12 @@
 			mainGroup = 0F2ACAB62B0469FD00F70839;
 			productRefGroup = 0F2ACAC02B0469FD00F70839 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0FF86ABE2B0717800019DE62 /* Products */;
+					ProjectRef = 0FF86ABD2B0717800019DE62 /* BcakgroundAudio.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				0F2ACABE2B0469FD00F70839 /* SiriCapability */,
@@ -264,6 +287,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0FF86AC22B0717800019DE62 /* BcakgroundAudio.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = BcakgroundAudio.app;
+			remoteRef = 0FF86AC12B0717800019DE62 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0F2ACABD2B0469FD00F70839 /* Resources */ = {
