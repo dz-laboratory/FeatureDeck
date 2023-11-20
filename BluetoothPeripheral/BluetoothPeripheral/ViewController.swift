@@ -7,7 +7,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var startAdvertiseButton: UIButton!
     @IBOutlet weak var stopAdvertiseButton: UIButton!
     @IBOutlet weak var notifyButton: UIButton!
-    @IBOutlet weak var indicateButton: UIButton!
     @IBOutlet weak var logTextView: UITextView!
     
     //MARK: - 変数
@@ -20,7 +19,6 @@ class ViewController: UIViewController {
     let BLEReadCharacteristicUUID = CBUUID(string:"AAAAAAAA-CCCC-BBBB-BBBB-BBBBBBBBBBBB")
     let BLENotifyCharacteristicUUID = CBUUID(string:"AAAAAAAA-DDDD-BBBB-BBBB-BBBBBBBBBBBB")
     let BLEIndicateCharacteristicUUID = CBUUID(string:"AAAAAAAA-EEEE-BBBB-BBBB-BBBBBBBBBBBB")
-
 
     //BLEで用いるサービス
     var service:CBMutableService?
@@ -50,7 +48,6 @@ class ViewController: UIViewController {
                 print("abc")
             }
         }
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +83,6 @@ class ViewController: UIViewController {
 
         notifyCharacteristic = CBMutableCharacteristic(type: BLENotifyCharacteristicUUID, properties: .notify, value: nil, permissions: .readable)
 
-        
         indicateCharacteristic = CBMutableCharacteristic(type: BLEIndicateCharacteristicUUID, properties: .indicate, value: nil, permissions: .readable)
 
         //サービスにキャラクタリスティックの設定
@@ -121,6 +117,20 @@ class ViewController: UIViewController {
         peripheralManager?.updateValue(indicateData, for: indicateCharacteristic!, onSubscribedCentrals: nil)
     }
     
+    @IBAction func sendData(_ sender: UIButton) {
+        //notifyでデータをCentralに送る
+        let notifyData = Data(Date().description.utf8)
+        peripheralManager?.updateValue(notifyData, for: notifyCharacteristic!, onSubscribedCentrals: nil)
+        
+        DispatchQueue.global().async { [self] in
+            while true {
+                sleep(1)
+                //notifyでデータをCentralに送る
+                let notifyData = Data(Date().description.utf8)
+                peripheralManager?.updateValue(notifyData, for: notifyCharacteristic!, onSubscribedCentrals: nil)
+            }
+        }
+    }
     
     //④アドバタイズを開始
     func startAdvertising()
@@ -151,31 +161,35 @@ class ViewController: UIViewController {
 extension ViewController : CBPeripheralManagerDelegate
 {
     
+    
     //Notify or Indicateの許可が行われた（ディスクリプタへの書き込み）時に呼ばれるDelegate
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        print("liu: A")
         print("didSubscribeToCharacteristic")
         logTextView.text.append("didSubscribeToCharacteristic\n")
         if(characteristic.uuid == BLENotifyCharacteristicUUID){
             notifyButton.isEnabled = true
         }else if (characteristic.uuid == BLEIndicateCharacteristicUUID){
-            indicateButton.isEnabled = true
+//            indicateButton.isEnabled = true
         }
         
     }
     
     //Notify or Indicateの禁止が行われた（ディスクリプタへの書き込み）時に呼ばれるDelegate
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
+        print("liu: B")
         print("didUnsubscribeFromCharacteristic")
         logTextView.text.append("didUnsubscribeFromCharacteristic\n")
         if(characteristic.uuid == BLENotifyCharacteristicUUID){
             notifyButton.isEnabled = false
         }else if (characteristic.uuid == BLEIndicateCharacteristicUUID){
-            indicateButton.isEnabled = false
+//            indicateButton.isEnabled = false
         }
     }
 
     //読み出し要求が行われた時に呼ばれるDelegate
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+        print("liu: C")
         print("didReceiveReadRequest")
         logTextView.text.append("didReceiveReadRequest\n")
 
@@ -195,7 +209,7 @@ extension ViewController : CBPeripheralManagerDelegate
     
     //書き込み要求が行われた時に呼ばれるDelegate
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
-        
+        print("liu: D")
         logTextView.text.append("didReceiveWriteRequest\n")
         for request in requests {
             if request.characteristic.uuid.isEqual(writeCharacteristic?.uuid) {
@@ -213,6 +227,7 @@ extension ViewController : CBPeripheralManagerDelegate
 
     //アドバタイズを開始した時に呼ばれるDelegate
     func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
+        print("liu: E")
         print("アドバタイズ開始")
         if error == nil {
             logTextView.text.append("PeripheralがAdvertisingを開始しました\n")
@@ -226,6 +241,8 @@ extension ViewController : CBPeripheralManagerDelegate
     //②Peripheralの状態が変化すると呼ばれるDelegate
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager)
     {
+        print("liu: F")
+        print("state: \(peripheral.state.name)")
         //PeripheralManagerのインスタンス化を実施するとすぐにPowerOnが呼ばれる。
         logTextView.text.append("PeripheralのStateが変更されました。\n現在のState:\(peripheral.state.name)\n")
 
@@ -239,11 +256,13 @@ extension ViewController : CBPeripheralManagerDelegate
 
     //updateValueのキューがいっぱいの時に値を送信しようとすると呼ばれるDelegate
     func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
+        print("liu: G")
         //この中で再送処理を入れるとよい
     }
     
     //PeripheralにServiceを追加した時に呼ばれるDelegate
     func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
+        print("liu: H")
         if error == nil {
             logTextView.text.append("サービスが正常に追加されました\n")
         } else {

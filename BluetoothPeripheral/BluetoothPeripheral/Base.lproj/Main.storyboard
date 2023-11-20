@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qEe-Qh-kp8">
-                                <rect key="frame" x="121" y="175" width="152" height="41"/>
+                                <rect key="frame" x="120" y="59" width="152" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="アドバタイズ開始"/>
@@ -27,7 +27,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJS-gx-2rA">
-                                <rect key="frame" x="120" y="264" width="152" height="41"/>
+                                <rect key="frame" x="121" y="108" width="152" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="アドバタイズ停止"/>
@@ -36,25 +36,16 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ObQ-av-d8J">
-                                <rect key="frame" x="162" y="406" width="70" height="41"/>
+                                <rect key="frame" x="147" y="157" width="100" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Notify"/>
+                                <buttonConfiguration key="configuration" style="filled" title="send data"/>
                                 <connections>
-                                    <action selector="notifyButtonTup:" destination="BYZ-38-t0r" eventType="touchDown" id="D2I-nl-MnC"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Sf-gU-2gE">
-                                <rect key="frame" x="155" y="516" width="85" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Indicate"/>
-                                <connections>
-                                    <action selector="indicateButtonTup:" destination="BYZ-38-t0r" eventType="touchDown" id="TAA-xN-NTm"/>
+                                    <action selector="sendData:" destination="BYZ-38-t0r" eventType="touchDown" id="JLL-tQ-zfh"/>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kCi-U8-ruD">
-                                <rect key="frame" x="16" y="604" width="361" height="248"/>
+                                <rect key="frame" x="16" y="255" width="361" height="597"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -66,9 +57,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
-                        <outlet property="indicateButton" destination="3Sf-gU-2gE" id="sEr-Q1-ygq"/>
                         <outlet property="logTextView" destination="kCi-U8-ruD" id="Qm5-fF-wPO"/>
-                        <outlet property="notifyButton" destination="ObQ-av-d8J" id="qTc-nS-DAZ"/>
+                        <outlet property="notifyButton" destination="ObQ-av-d8J" id="JeQ-zD-URM"/>
                         <outlet property="startAdvertiseButton" destination="qEe-Qh-kp8" id="mAb-8h-ot7"/>
                         <outlet property="stopAdvertiseButton" destination="sJS-gx-2rA" id="pFF-5b-ruC"/>
                     </connections>

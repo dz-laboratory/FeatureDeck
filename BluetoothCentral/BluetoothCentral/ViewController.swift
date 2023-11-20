@@ -14,6 +14,17 @@ class ViewController: NSViewController {
     private var writeCharacteristic: CBCharacteristic? = nil
     private var readCharacteristic: CBCharacteristic? = nil
     
+    private var keepCharacteristic: CBCharacteristic?
+    
+    @IBAction
+    func getData(sender: AnyObject) {
+        print("to get data")
+        if let pp = pp, let keepCharacteristic = keepCharacteristic {
+            print("get Data!")
+            pp.readValue(for: keepCharacteristic)
+        }
+    }
+    
     
     @IBAction
     func scan(sender: AnyObject){
@@ -139,6 +150,8 @@ extension ViewController : CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         NSLog("A")
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -153,9 +166,58 @@ extension ViewController : CBCentralManagerDelegate {
         NSLog("D")
     }
     
-    func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
-        NSLog("E")
-    }
+//    func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
+//        NSLog("E")
+//    }
     
 }
 
+extension ViewController: CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        //全てのサービスのキャラクタリスティックの検索
+        for service in peripheral.services! {
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("AAA")
+        print("送信元のCharacteristic:",characteristic.uuid.uuidString)
+        if let error = error {
+            print("情報受信失敗...error:",error.localizedDescription)
+        } else {
+            print("受信成功")
+            let receivedData = String(bytes: characteristic.value!, encoding: String.Encoding.ascii)
+            print("受信データ",receivedData)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
+        print("BBB")
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        for characteristic in service.characteristics!{
+//            if characteristic.uuid.uuidString == "属性がNotify or indicateのキャラクタリスティックのUUID" {
+//                //Notificationを受け取るハンドラ
+//                peripheral.setNotifyValue(true, for: characteristic)
+//            }
+//            if characteristic.uuid.uuidString == "属性がWriteのキャラクタリスティックのUUID" {
+//                writeCharacteristic = characteristic
+//            }
+//            if characteristic.uuid.uuidString == "属性がreadのキャラクタリスティックのUUID"{
+//                readCharacteristic = characteristic
+//            }
+            //なおcharacteristicの属性は以下で取得可能
+            //characteristic.propertie
+            //「.indicate .notify .read .write .writeWithoutResponse」で属性の判別が可能
+            print("発見したキャラクタリスティック",characteristic.uuid.uuidString)
+            
+            if characteristic.uuid.uuidString == "AAAAAAAA-DDDD-BBBB-BBBB-BBBBBBBBBBBB" {
+                print("keep!")
+                keepCharacteristic = characteristic
+                pp?.setNotifyValue(true, for: characteristic)
+            }
+        }
+    }
+}
