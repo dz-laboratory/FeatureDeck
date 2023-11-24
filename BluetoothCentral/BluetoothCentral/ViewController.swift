@@ -1,9 +1,11 @@
 // copy from https://nonateck.com/?p=37
 
+import AVFoundation
 import Cocoa
 import CoreBluetooth
+import AppKit
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     var pp: CBPeripheral? = nil
     //セントラルの振る舞いは全てcentralManagerで操作します
     private var centralManager:CBCentralManager!
@@ -15,6 +17,10 @@ class ViewController: NSViewController {
     private var readCharacteristic: CBCharacteristic? = nil
     
     private var keepCharacteristic: CBCharacteristic?
+    
+    private var deviceDictionary: Dictionary<String, CBUUID> = Dictionary<String, CBUUID>()
+    
+    @IBOutlet weak var table: NSTableView!
     
     @IBAction
     func getData(sender: AnyObject) {
@@ -57,14 +63,52 @@ class ViewController: NSViewController {
         //セントラルマネージャーを初期化：初期化した時点でPermissionの許諾のpopupが出て、Bluetoothの電源がONになる。
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
+    
+//    var
+}
 
+extension ViewController {
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
         }
     }
 
-
+    public func numberOfRows(in tableView: NSTableView) -> Int {
+        return deviceDictionary.count
+    }
+    
+    public func tableView(_ tableView: NSTableView, viewFor
+        tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        
+        print(#function + " column:" +
+            tableColumn!.identifier.rawValue + " row:" + String(row))
+        var result: NSTextField? =
+            tableView.makeView(withIdentifier:NSUserInterfaceItemIdentifier(rawValue:
+                "MyView"), owner: self) as? NSTextField
+        if result == nil {
+            result = NSTextField(frame: NSZeroRect)
+            result?.identifier =
+                NSUserInterfaceItemIdentifier(rawValue: "MyView")
+        }
+        if let view = result {
+            print("view:" + view.identifier!.rawValue + " row:" + String(row))
+            let key = deviceDictionary.keys.sorted()[row]
+            if let column = tableColumn {
+                if column.title == "C1" {
+                    view.stringValue = key
+                } else if column.title == "C2" {
+                    view.stringValue = deviceDictionary[key]?.className ?? "nil"
+                } else if column.title == "C3" {
+                    let data = deviceDictionary[key]!.data
+                    view.stringValue = String(decoding: data, as: UTF8.self)
+                } else if column.title == "C4" {
+                    view.stringValue = deviceDictionary[key].debugDescription
+                }
+            }
+        }
+        return result
+    }
 }
 
 
@@ -102,54 +146,41 @@ extension ViewController : CBCentralManagerDelegate {
     
     //④スキャンでPeripheralが見つかる毎に呼ばれるメソッド
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-  
+        print("liu: data: " + advertisementData.debugDescription)
+        peripheral.discoverServices([CBUUID(data: Data([0x18,0x0A]))])
+        let services = peripheral.services
+        for s in services ?? [] {
+            print("liu: uuid: " + s.uuid.uuidString )
+        }
+        
+        central.connect(peripheral, options: nil)
+        print("liu: name: " + (peripheral.name ?? "nil"))
+        print("liu: services: " + peripheral.services.debugDescription)
+        peripheral.delegate = self
+        
         if let uuid = advertisementData["kCBAdvDataServiceUUIDs"] {
             let id = (uuid as! NSArray)[0] as! CBUUID
             let idStr = id.uuidString
-            if idStr == "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" {
-                print("find!!")
-                central.connect(peripheral, options: nil)
-                pp = peripheral
-                centralManager.stopScan()
-            } else {
-                print(idStr)
-            }
+            print("liu: real-name: " + (peripheral.name ?? "nil"))
+            print("liu: real-class: " + (peripheral.className))
+            print("liu: real-uuid:" + peripheral.identifier.uuidString)
+//            if idStr == "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" {
+//                print("find!!")
+//                central.connect(peripheral, options: nil)
+//                pp = peripheral
+//                centralManager.stopScan()
+//            } else {
+//                print(idStr)
+//            }
+            deviceDictionary[idStr] = id
+            table.reloadData()
+            print("liu:reload")
         }
-        
-//        //peripheralのローカルネーム
-//        print("name:\(peripheral.name)")
-//        //advertiseの中身
-//        print("advertisementData:\(advertisementData)")
-//        //advertiseに入っているServiceUUID
-//        print("advertisementServiceUUID:\(advertisementData["kCBAdvDataServiceUUIDs"])")
-//        //advertiseの電波強度（RSSI）
-//        print("rssi:\(RSSI.stringValue)")
-//
-//        //名称フィルターして接続する場合
-//        if peripheral.name == "接続したいperipheralの名称"{
-//            //見つけたペリフェラルを保持
-//            self.cbPeripheral = peripheral
-//            central.connect(peripheral, options: nil)
-//            //スキャン停止
-//            centralManager.stopScan()
-//        }
-            
-            //アドバタイズに入っているService UUIDでフィルターして接続する場合
-            //※実シーンではscanの時点でadvertisementDataを指定することでフィルターをかけるので使用シーンはほとんど無いと思われる
-    //        let SERVICE_UUID:CBUUID = CBUUID(string: "接続したい機器がアドバタイズに乗っけているServiceUUID")
-    //        if advertisementData["kCBAdvDataServiceUUIDs"] != nil {
-    //            let UUID:[CBUUID] = advertisementData["kCBAdvDataServiceUUIDs"] as! [CBUUID]
-    //            //アドバタイズに入っているUUIDは一つだけのため
-    //            if UUID.first == SERVICE_UUID{
-    //                central.connect(peripheral, options: nil)
-    //            }
-    //            //スキャン停止
-    //            centralManager.stopScan()
-    //        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         NSLog("A")
+        print("liu: A")
         peripheral.delegate = self
         peripheral.discoverServices(nil)
     }
@@ -197,20 +228,11 @@ extension ViewController: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        print("liu: uuid: " + service.uuid.uuidString)
+        for s in service.includedServices ?? [] {
+            print("liu: uuid: include: " + s.uuid.uuidString )
+        }
         for characteristic in service.characteristics!{
-//            if characteristic.uuid.uuidString == "属性がNotify or indicateのキャラクタリスティックのUUID" {
-//                //Notificationを受け取るハンドラ
-//                peripheral.setNotifyValue(true, for: characteristic)
-//            }
-//            if characteristic.uuid.uuidString == "属性がWriteのキャラクタリスティックのUUID" {
-//                writeCharacteristic = characteristic
-//            }
-//            if characteristic.uuid.uuidString == "属性がreadのキャラクタリスティックのUUID"{
-//                readCharacteristic = characteristic
-//            }
-            //なおcharacteristicの属性は以下で取得可能
-            //characteristic.propertie
-            //「.indicate .notify .read .write .writeWithoutResponse」で属性の判別が可能
             print("発見したキャラクタリスティック",characteristic.uuid.uuidString)
             
             if characteristic.uuid.uuidString == "AAAAAAAA-DDDD-BBBB-BBBB-BBBBBBBBBBBB" {

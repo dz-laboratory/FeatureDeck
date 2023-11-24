@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:HeathKit/HeathKit.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:BluetoothCentral/BluetoothCentral.xcodeproj">
    </FileRef>
    <FileRef
